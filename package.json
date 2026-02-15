@@ -1,0 +1,10 @@
+{
+  "private": true,
+  "scripts": {
+    "dev:client": "npm run dev --workspace=client"
+  },
+  "workspaces": [
+    "client",
+    "server"
+  ]
+}
