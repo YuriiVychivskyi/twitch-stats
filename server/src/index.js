@@ -2,7 +2,9 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import express from 'express'
 
+import { errorHandler } from './middleware/errorHandler.js'
 import apiRoutes from './routes/index.js'
+import { AppError } from './utils/AppError.js'
 
 dotenv.config()
 const app = express()
@@ -21,13 +23,10 @@ app.use(express.json())
 app.use('/api', apiRoutes)
 
 app.use((req, res, next) => {
-  res.status(404).send("Sorry can't find that!")
+  next(new AppError(`Route ${req.originalUrl} not found`, 404))
 })
 
-app.use((err, req, res, next) => {
-  console.error(err.stack)
-  res.status(500).send('Something broke!')
-})
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 3001
 
