@@ -3,7 +3,8 @@ import dotenv from 'dotenv'
 import express from 'express'
 
 import { errorHandler } from './middleware/errorHandler.js'
-import apiRoutes from './routes/index.js'
+import authRoutes from './routes/authRoutes.js'
+import eventSubRoutes from './routes/eventSubRotes.js'
 import { AppError } from './utils/AppError.js'
 
 dotenv.config()
@@ -20,7 +21,8 @@ app.use(cors(corsOptions))
 
 app.use(express.json())
 
-app.use('/api', apiRoutes)
+app.use('/api', authRoutes)
+app.use('/', eventSubRoutes)
 
 app.use((req, res, next) => {
   next(new AppError(`Route ${req.originalUrl} not found`, 404))
