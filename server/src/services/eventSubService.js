@@ -1,7 +1,10 @@
 import axios from 'axios'
+import { FieldValue } from 'firebase-admin/firestore'
 
 import { validateTwitchEnv } from '../config/env.js'
 import { db } from '../config/firebase.js'
+import { mapTwitchStreamData } from '../mappers/streamMapper.js'
+import Stream from '../models/Stream.js'
 import { getStreamerById } from '../services/streamerService.js'
 import { AppError } from '../utils/AppError.js'
 
@@ -106,11 +109,49 @@ const createEventSubSubscription = async (type, broadcasterUserId) => {
   return res.data
 }
 
-const handleStreamOnline = (event) => {
-  console.log(event)
+const handleStreamOnline = async (event) => {
+  const stream = mapTwitchStreamData(event)
+  const streamData = Stream.parse(stream)
+  const { streamerTwitchId, twitchStreamId, ...rest } = streamData
+
+  await db
+    .collection('streamers')
+    .doc(streamerTwitchId)
+    .collection('streams')
+    .doc(twitchStreamId)
+    .set({ twitchStreamId, ...rest })
+
+  console.log('Stream saved!')
 }
-const handleStreamOffline = (event) => {
-  console.log(event)
+
+const handleStreamOffline = async (event) => {
+  const { broadcaster_user_id } = event
+
+  if (!broadcaster_user_id) {
+    throw new AppError('Streamer not found', 404)
+  }
+
+  const streamsQuery = db
+    .collection('streamers')
+    .doc(broadcaster_user_id)
+    .collection('streams')
+    .where('status', '==', 'live')
+    .limit(1)
+
+  const querySnapshot = await streamsQuery.get()
+
+  if (querySnapshot.empty) {
+    throw new AppError('Live stream not found', 404)
+  }
+
+  const streamRef = querySnapshot.docs[0].ref
+
+  await streamRef.update({
+    status: 'ended',
+    endedAt: FieldValue.serverTimestamp(),
+  })
+
+  console.log('Stream ended!')
 }
 
 export {
