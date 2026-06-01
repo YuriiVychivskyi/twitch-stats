@@ -7,6 +7,10 @@ import { mapTwitchStreamData } from '../mappers/streamMapper.js'
 import Stream from '../models/Stream.js'
 import { getStreamerById } from '../services/streamerService.js'
 import { AppError } from '../utils/AppError.js'
+import {
+  addActiveStream,
+  removeActiveStream,
+} from './liveStreamStateService.js'
 
 const getAppAccessToken = async () => {
   const url = new URL('https://id.twitch.tv/oauth2/token')
@@ -121,15 +125,19 @@ const handleStreamOnline = async (event) => {
     .doc(twitchStreamId)
     .set({ twitchStreamId, ...rest })
 
+  await addActiveStream(streamerTwitchId, twitchStreamId)
+
   console.log('Stream saved!')
 }
 
 const handleStreamOffline = async (event) => {
-  const { broadcaster_user_id } = event
+  const { broadcaster_user_id, broadcaster_user_login } = event
 
   if (!broadcaster_user_id) {
     throw new AppError('Streamer not found', 404)
   }
+
+  const finalStats = await removeActiveStream(broadcaster_user_id)
 
   const streamsQuery = db
     .collection('streamers')
@@ -148,6 +156,7 @@ const handleStreamOffline = async (event) => {
 
   await streamRef.update({
     status: 'ended',
+    totalMessages: finalStats?.totalMessages ?? 0,
     endedAt: FieldValue.serverTimestamp(),
   })
 
