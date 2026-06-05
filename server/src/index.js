@@ -6,12 +6,13 @@ import { connectRedis } from './config/redis.js'
 import { errorHandler } from './middleware/errorHandler.js'
 import authRoutes from './routes/authRoutes.js'
 import eventSubRoutes from './routes/eventSubRotes.js'
+import { connectBot } from './services/botService.js'
 import { AppError } from './utils/AppError.js'
 
 dotenv.config()
 const app = express()
 await connectRedis()
-// await connectBot()
+await connectBot()
 
 const corsOptions = {
   origin: 'http://localhost:3000',

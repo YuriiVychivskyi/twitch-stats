@@ -4,5 +4,16 @@ const activeStreamKey = (streamerTwitchId) => {
 const streamStatsKey = (twitchStreamId) => {
   return `stream:${twitchStreamId}:stats`
 }
+const streamChatterKey = (twitchStreamId) => {
+  return `stream:${twitchStreamId}:chatters`
+}
+const streamChatterMetaKey = (twitchStreamId) => {
+  return `stream:${twitchStreamId}:chatterMeta`
+}
 
-export { activeStreamKey, streamStatsKey }
+export {
+  activeStreamKey,
+  streamChatterKey,
+  streamChatterMetaKey,
+  streamStatsKey,
+}

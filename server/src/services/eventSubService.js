@@ -7,6 +7,7 @@ import { mapTwitchStreamData } from '../mappers/streamMapper.js'
 import Stream from '../models/Stream.js'
 import { getStreamerById } from '../services/streamerService.js'
 import { AppError } from '../utils/AppError.js'
+import { joinChannel, partChannel } from './botService.js'
 import {
   addActiveStream,
   removeActiveStream,
@@ -127,10 +128,14 @@ const handleStreamOnline = async (event) => {
 
   await addActiveStream(streamerTwitchId, twitchStreamId)
 
+  const login = event.broadcaster_user_login.replace(/#/g, '')
+  await joinChannel(login)
+
   console.log('Stream saved!')
 }
 
 const handleStreamOffline = async (event) => {
+  const batch = db.batch()
   const { broadcaster_user_id, broadcaster_user_login } = event
 
   if (!broadcaster_user_id) {
@@ -159,6 +164,23 @@ const handleStreamOffline = async (event) => {
     totalMessages: finalStats?.totalMessages ?? 0,
     endedAt: FieldValue.serverTimestamp(),
   })
+
+  const chatters = finalStats?.chatters ?? []
+
+  chatters.forEach((chatter) => {
+    if (!chatter.chatterTwitchId) return
+
+    const chatterRef = streamRef
+      .collection('chatters')
+      .doc(chatter.chatterTwitchId)
+
+    batch.set(chatterRef, chatter)
+  })
+
+  if (chatters.length) await batch.commit()
+
+  const login = broadcaster_user_login.replace(/#/g, '')
+  await partChannel(login)
 
   console.log('Stream ended!')
 }
