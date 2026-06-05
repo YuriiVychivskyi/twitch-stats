@@ -1,46 +1,71 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-lerna-debug.log*
-
-# Runtime data
-pids
-*.pid
-*.seed
-*.pid.lock
-
-# Coverage
-coverage
-*.lcov
-.nyc_output
-
-# Dependency directories
+# Dependencies
 node_modules/
 bower_components/
 jspm_packages/
-
-# TypeScript cache
-*.tsbuildinfo
-
-# Optional npm/yarn caches
-.npm
-.yarn/*
-.pnp.*
 
 # Environment variables
 .env
 .env.*
 !.env.example
 
-# Next.js build output
-.next
-out
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# Firebase cache
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Build output
+dist/
+build/
+out/
+.next/
+.turbo/
+
+# TypeScript
+*.tsbuildinfo
+
+# Coverage
+coverage/
+*.lcov
+.nyc_output/
+
+# Package manager caches
+.npm/
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
+
+# Firebase
 .firebase/
+serviceAccountKey.json
+*-firebase-adminsdk-*.json
 
-# VSCode settings
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor settings
 .vscode/
+.idea/
+
+# Local certificates/secrets
+*.pem
+*.key
+*.crt
+
+# Temporary files
+tmp/
+temp/
+.cache/
