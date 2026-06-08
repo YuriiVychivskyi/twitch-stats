@@ -6,6 +6,7 @@ import { connectRedis } from './config/redis.js'
 import { errorHandler } from './middleware/errorHandler.js'
 import authRoutes from './routes/authRoutes.js'
 import eventSubRoutes from './routes/eventSubRotes.js'
+import streamStatsRoute from './routes/streamStatsRoute.js'
 import { connectBot } from './services/botService.js'
 import { AppError } from './utils/AppError.js'
 
@@ -26,6 +27,7 @@ app.use(cors(corsOptions))
 app.use(express.json())
 
 app.use('/api', authRoutes)
+app.use('/api', streamStatsRoute)
 app.use('/', eventSubRoutes)
 
 app.use((req, res, next) => {

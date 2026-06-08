@@ -42,8 +42,16 @@ const getActiveStreamStats = async (streamerTwitchId) => {
   if (!twitchStreamId) return null
 
   const stats = await client.hGetAll(streamStatsKey(twitchStreamId))
+  const chatterStats = await client.hGetAll(streamChatterKey(twitchStreamId))
+  const chatterMeta = await client.hGetAll(streamChatterMetaKey(twitchStreamId))
 
-  return { twitchStreamId, totalMessages: Number(stats.totalMessages || 0) }
+  const chatters = formatChatters(chatterStats, chatterMeta)
+
+  return {
+    twitchStreamId,
+    totalMessages: Number(stats.totalMessages || 0),
+    chatters,
+  }
 }
 
 const removeActiveStream = async (streamerTwitchId) => {
