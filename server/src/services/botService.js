@@ -2,18 +2,20 @@ import 'dotenv/config'
 import tmi from 'tmi.js'
 
 import { AppError } from '../utils/AppError.js'
+import { refreshBotAccessToken } from './botAuthService.js'
 import { trackStreamMessage } from './liveStreamStateService.js'
 
 let client = null
 
 const connectBot = async () => {
   if (client) return
+  const { access_token } = await refreshBotAccessToken()
 
   client = new tmi.Client({
     options: { debug: true },
     identity: {
       username: process.env.TWITCH_BOT_USERNAME,
-      password: `oauth:${process.env.TWITCH_BOT_ACCESS_TOKEN}`,
+      password: `oauth:${access_token}`,
     },
     channels: [],
   })
