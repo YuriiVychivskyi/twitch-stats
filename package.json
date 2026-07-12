@@ -2,6 +2,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "dev": "concurrently -k -n client,server -c blue,green \"npm run dev:client\" \"npm run dev:server\"",
     "dev:client": "npm run dev --workspace=client",
     "dev:server": "npm run dev --workspace=server",
     "build:client": "npm run build --workspace=client",
@@ -19,6 +20,7 @@
     "@eslint/js": "^9.39.3",
     "@trivago/prettier-plugin-sort-imports": "^6.0.2",
     "@types/node": "^20",
+    "concurrently": "^10.0.3",
     "eslint": "^9.39.3",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.5",
