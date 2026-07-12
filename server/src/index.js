@@ -7,6 +7,7 @@ import { errorHandler } from './middleware/errorHandler.js'
 import authRoutes from './routes/authRoutes.js'
 import eventSubRoutes from './routes/eventSubRotes.js'
 import streamStatsRoute from './routes/streamStatsRoute.js'
+import streamerRoutes from './routes/streamerRoutes.js'
 import { connectBot } from './services/botService.js'
 import { AppError } from './utils/AppError.js'
 
@@ -28,6 +29,7 @@ app.use(express.json())
 
 app.use('/api', authRoutes)
 app.use('/api', streamStatsRoute)
+app.use('/api', streamerRoutes)
 app.use('/', eventSubRoutes)
 
 app.use((req, res, next) => {

@@ -39,4 +39,25 @@ const getStreamerById = async (twitchId) => {
   return snapshot.data()
 }
 
-export { getStreamerById, upsertStreamer }
+const getStreamerPublicProfile = async (streamerTwitchId) => {
+  const streamerData = await getStreamerById(streamerTwitchId)
+
+  if (!streamerData) {
+    throw new AppError('Streamer not found', 404)
+  }
+
+  const { twitchId, login, displayName, profileImageUrl } = streamerData
+
+  if (!twitchId || !login || !displayName) {
+    throw new AppError('Streamer profile is incomplete', 500)
+  }
+
+  return {
+    twitchId,
+    login,
+    displayName,
+    profileImageUrl: profileImageUrl ?? null,
+  }
+}
+
+export { getStreamerById, getStreamerPublicProfile, upsertStreamer }

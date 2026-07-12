@@ -1,6 +1,16 @@
 import axios from 'axios'
 
+import { AppError } from '../utils/AppError.js'
+
 const refreshBotAccessToken = async () => {
+  if (
+    !process.env.TWITCH_BOT_CLIENT_ID ||
+    !process.env.TWITCH_BOT_CLIENT_SECRET ||
+    !process.env.TWITCH_BOT_REFRESH_TOKEN
+  ) {
+    throw new AppError('Bot env params error', 500)
+  }
+
   const params = new URLSearchParams({
     client_id: process.env.TWITCH_BOT_CLIENT_ID,
     client_secret: process.env.TWITCH_BOT_CLIENT_SECRET,

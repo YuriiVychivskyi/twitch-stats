@@ -85,6 +85,9 @@ const createEventSubSubscription = async (type, broadcasterUserId) => {
   const url = 'https://api.twitch.tv/helix/eventsub/subscriptions'
 
   validateTwitchEnv()
+  if (!process.env.WEBHOOK_CALLBACK_URL || !process.env.WEBHOOK_SECRET) {
+    throw new AppError('Webhook env params error', 500)
+  }
 
   const { access_token } = await getAppAccessToken()
 
@@ -102,7 +105,7 @@ const createEventSubSubscription = async (type, broadcasterUserId) => {
     },
     transport: {
       method: 'webhook',
-      callback: 'https://diving-scrutiny-gladly.ngrok-free.dev/twitch/webhook',
+      callback: process.env.WEBHOOK_CALLBACK_URL,
       secret: process.env.WEBHOOK_SECRET,
     },
   }

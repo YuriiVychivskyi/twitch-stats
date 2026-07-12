@@ -11,7 +11,12 @@ const redirectToTwitchAuth = (req, res, next) => {
 const twitchAuthCallback = async (req, res, next) => {
   const code = req.query.code
   const user = await handleTwitchCallback(code)
-  return res.json(user)
+  const clientUrl = process.env.CLIENT_URL || 'http://localhost:3000'
+  const searchParams = new URLSearchParams({
+    streamerTwitchId: user.twitchId,
+  })
+
+  return res.redirect(`${clientUrl}/dashboard?${searchParams.toString()}`)
 }
 
 export { redirectToTwitchAuth, twitchAuthCallback }
