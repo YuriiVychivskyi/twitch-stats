@@ -1,3 +1,4 @@
+import { StarfieldBackground } from '@/components/ui/animated-background'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import Link from 'next/link'
@@ -21,6 +22,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        <StarfieldBackground
+          className="pointer-events-none z-0"
+          count={250}
+          speed={0.25}
+          starColor="#a970ff"
+          twinkle
+        />
+
         <main className="mx-auto min-h-screen w-full max-w-[1280px] px-4 md:px-8 lg:px-10">
           {children}
         </main>
