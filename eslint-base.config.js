@@ -11,7 +11,10 @@ const baseConfig = defineConfig([
     rules: {
       'prettier/prettier': 'error',
       'no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-vars': 'error',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_' },
+      ],
     },
     ignores: ['node_modules'],
   },

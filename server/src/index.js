@@ -25,7 +25,13 @@ const corsOptions = {
 
 app.use(cors(corsOptions))
 
-app.use(express.json())
+app.use(
+  express.json({
+    verify: (req, res, buf) => {
+      req.rawBody = buf
+    },
+  }),
+)
 
 app.use('/api', authRoutes)
 app.use('/api', streamStatsRoute)

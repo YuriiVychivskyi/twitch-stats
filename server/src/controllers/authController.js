@@ -3,12 +3,12 @@ import {
   handleTwitchCallback,
 } from '../services/authService.js'
 
-const redirectToTwitchAuth = (req, res, next) => {
+const redirectToTwitchAuth = (req, res) => {
   const twitchAuthUrl = getTwitchAuthUrl()
 
   return res.redirect(twitchAuthUrl)
 }
-const twitchAuthCallback = async (req, res, next) => {
+const twitchAuthCallback = async (req, res) => {
   const code = req.query.code
   const user = await handleTwitchCallback(code)
   const clientUrl = process.env.CLIENT_URL || 'http://localhost:3000'
