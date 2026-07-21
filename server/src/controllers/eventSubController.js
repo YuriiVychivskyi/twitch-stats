@@ -1,6 +1,6 @@
 import {
-  handleStreamOffline,
-  handleStreamOnline,
+  processStreamOfflineEvent,
+  processStreamOnlineEvent,
 } from '../services/eventSubService.js'
 
 const handleEventSubNotification = async (req, res) => {
@@ -14,11 +14,11 @@ const handleEventSubNotification = async (req, res) => {
     const subscriptionType = req.body.subscription.type
 
     if (subscriptionType === 'stream.online') {
-      await handleStreamOnline(req.body.event)
+      await processStreamOnlineEvent(req.body.event)
     }
 
     if (subscriptionType === 'stream.offline') {
-      await handleStreamOffline(req.body.event)
+      await processStreamOfflineEvent(req.body.event)
     }
   }
 

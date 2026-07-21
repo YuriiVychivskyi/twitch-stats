@@ -1,4 +1,4 @@
-function WidgetsList() {
+function StreamWidgetsList() {
   return (
     <div className="space-y-3">
       <h3 className="text-2xl leading-none font-semibold text-white">
@@ -17,4 +17,4 @@ function WidgetsList() {
   )
 }
 
-export default WidgetsList
+export default StreamWidgetsList

@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 import { validateTwitchEnv } from '../config/env.js'
-import { AppError } from '../utils/AppError.js'
+import { AppError } from '../utils/appError.js'
 
 export const getTwitchUserData = async (url, params) => {
   const response = await axios.post(url, params)

@@ -4,14 +4,14 @@ import { FieldValue } from 'firebase-admin/firestore'
 import { validateTwitchEnv } from '../config/env.js'
 import { db } from '../config/firebase.js'
 import { mapTwitchStreamData } from '../mappers/streamMapper.js'
-import Stream from '../models/Stream.js'
+import StreamSchema from '../schemas/streamSchema.js'
 import { getStreamerById } from '../services/streamerService.js'
-import { AppError } from '../utils/AppError.js'
+import { AppError } from '../utils/appError.js'
 import { joinChannel, partChannel } from './botService.js'
 import {
-  addActiveStream,
+  clearActiveStreamState,
   getActiveStreamStats,
-  removeActiveStream,
+  initializeActiveStreamState,
 } from './liveStreamStateService.js'
 
 const getAppAccessToken = async () => {
@@ -34,7 +34,7 @@ const getAppAccessToken = async () => {
   return { access_token, expires_in }
 }
 
-const ensureStreamerSubscription = async (twitchId) => {
+const ensureStreamerSubscriptions = async (twitchId) => {
   const streamer = await getStreamerById(twitchId)
 
   let onlineSubscriptionId = streamer.onlineSubscriptionId
@@ -118,9 +118,9 @@ const createEventSubSubscription = async (type, broadcasterUserId) => {
   return res.data
 }
 
-const handleStreamOnline = async (event) => {
+const processStreamOnlineEvent = async (event) => {
   const stream = mapTwitchStreamData(event)
-  const streamData = Stream.parse(stream)
+  const streamData = StreamSchema.parse(stream)
   const { streamerTwitchId, twitchStreamId, ...rest } = streamData
 
   await db
@@ -130,7 +130,7 @@ const handleStreamOnline = async (event) => {
     .doc(twitchStreamId)
     .set({ twitchStreamId, ...rest })
 
-  await addActiveStream(streamerTwitchId, twitchStreamId)
+  await initializeActiveStreamState(streamerTwitchId, twitchStreamId)
 
   const login = event.broadcaster_user_login.replace(/#/g, '')
   await joinChannel(login)
@@ -138,7 +138,7 @@ const handleStreamOnline = async (event) => {
   console.log('Stream saved!')
 }
 
-const handleStreamOffline = async (event) => {
+const processStreamOfflineEvent = async (event) => {
   const batch = db.batch()
   const { broadcaster_user_id, broadcaster_user_login } = event
 
@@ -183,7 +183,7 @@ const handleStreamOffline = async (event) => {
 
   await batch.commit()
 
-  await removeActiveStream(broadcaster_user_id)
+  await clearActiveStreamState(broadcaster_user_id)
   const login = broadcaster_user_login.replace(/#/g, '')
   await partChannel(login)
 
@@ -192,8 +192,8 @@ const handleStreamOffline = async (event) => {
 
 export {
   createEventSubSubscription,
-  ensureStreamerSubscription,
+  ensureStreamerSubscriptions,
   getAppAccessToken,
-  handleStreamOffline,
-  handleStreamOnline,
+  processStreamOfflineEvent,
+  processStreamOnlineEvent,
 }

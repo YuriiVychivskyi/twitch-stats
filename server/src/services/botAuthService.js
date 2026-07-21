@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import { AppError } from '../utils/AppError.js'
+import { AppError } from '../utils/appError.js'
 
 const refreshBotAccessToken = async () => {
   if (

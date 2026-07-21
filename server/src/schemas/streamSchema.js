@@ -6,7 +6,7 @@ const toDate = (val) => {
   return val
 }
 
-const Stream = z.object({
+const StreamSchema = z.object({
   streamerTwitchId: z.string(),
   twitchStreamId: z.string(),
   startedAt: z.preprocess(toDate, z.date()).default(() => new Date()),
@@ -15,4 +15,4 @@ const Stream = z.object({
   totalMessages: z.number().default(0),
 })
 
-export default Stream
+export default StreamSchema

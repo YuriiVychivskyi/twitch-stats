@@ -1,14 +1,14 @@
 import express from 'express'
 
 import {
+  handleTwitchAuthCallback,
   redirectToTwitchAuth,
-  twitchAuthCallback,
 } from '../controllers/authController.js'
-import { asyncWrapper } from '../utils/asyncWrapper.js'
+import { asyncHandler } from '../utils/asyncHandler.js'
 
 const router = express.Router()
 
-router.get('/auth/twitch', asyncWrapper(redirectToTwitchAuth))
-router.get('/auth/callback', asyncWrapper(twitchAuthCallback))
+router.get('/auth/twitch', asyncHandler(redirectToTwitchAuth))
+router.get('/auth/callback', asyncHandler(handleTwitchAuthCallback))
 
 export default router

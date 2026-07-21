@@ -8,7 +8,7 @@ const redirectToTwitchAuth = (req, res) => {
 
   return res.redirect(twitchAuthUrl)
 }
-const twitchAuthCallback = async (req, res) => {
+const handleTwitchAuthCallback = async (req, res) => {
   const code = req.query.code
   const user = await handleTwitchCallback(code)
   const clientUrl = process.env.CLIENT_URL || 'http://localhost:3000'
@@ -19,4 +19,4 @@ const twitchAuthCallback = async (req, res) => {
   return res.redirect(`${clientUrl}/dashboard?${searchParams.toString()}`)
 }
 
-export { redirectToTwitchAuth, twitchAuthCallback }
+export { handleTwitchAuthCallback, redirectToTwitchAuth }

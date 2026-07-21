@@ -1,10 +1,10 @@
 import express from 'express'
 
-import { getPublicProfile } from '../controllers/streamerController.js'
-import { asyncWrapper } from '../utils/asyncWrapper.js'
+import { getStreamerProfile } from '../controllers/streamerController.js'
+import { asyncHandler } from '../utils/asyncHandler.js'
 
 const router = express.Router()
 
-router.get('/streamers/:streamerTwitchId', asyncWrapper(getPublicProfile))
+router.get('/streamers/:streamerTwitchId', asyncHandler(getStreamerProfile))
 
 export default router

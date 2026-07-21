@@ -1,12 +1,12 @@
 import Image from 'next/image'
 
-interface Header {
-  img: string | null
-  username: string
+interface DashboardHeaderProps {
+  displayName: string
+  imageUrl: string | null
 }
 
-function DashboardHeader({ img, username }: Header) {
-  const avatarSrc = img || '/twitch.svg'
+function DashboardHeader({ displayName, imageUrl }: DashboardHeaderProps) {
+  const avatarSrc = imageUrl || '/twitch.svg'
 
   return (
     <header className="flex w-full items-center justify-between py-5">
@@ -20,7 +20,7 @@ function DashboardHeader({ img, username }: Header) {
           height={32}
           className="h-8 w-8 rounded-full object-cover"
         />
-        <span className="text-white">{username}</span>
+        <span className="text-white">{displayName}</span>
       </div>
     </header>
   )

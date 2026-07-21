@@ -1,7 +1,7 @@
 import DashboardClient from '@/features/dashboard/DashboardClient'
 import { getApiUrl } from '@/lib/api'
 
-export default async function Dashboard({
+export default async function DashboardPage({
   searchParams,
 }: {
   searchParams: Promise<{ streamerTwitchId: string }>

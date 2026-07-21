@@ -1,8 +1,8 @@
 import { db } from '../config/firebase.js'
 import { mapTwitchUserToStreamer } from '../mappers/streamerMapper.js'
-import Streamer from '../models/Streamer.js'
-import { AppError } from '../utils/AppError.js'
-import { ensureStreamerSubscription } from './eventSubService.js'
+import StreamerSchema from '../schemas/streamerSchema.js'
+import { AppError } from '../utils/appError.js'
+import { ensureStreamerSubscriptions } from './eventSubService.js'
 import { getTwitchUserData } from './twitchService.js'
 
 const upsertStreamer = async function (url, params) {
@@ -10,7 +10,7 @@ const upsertStreamer = async function (url, params) {
 
   const streamer = mapTwitchUserToStreamer(response)
 
-  const streamerData = Streamer.parse(streamer)
+  const streamerData = StreamerSchema.parse(streamer)
 
   const { twitchId, ...rest } = streamerData
 
@@ -21,7 +21,7 @@ const upsertStreamer = async function (url, params) {
 
   console.log('User saved!')
 
-  await ensureStreamerSubscription(twitchId)
+  await ensureStreamerSubscriptions(twitchId)
 
   return streamerData
 }

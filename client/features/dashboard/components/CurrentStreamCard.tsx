@@ -1,6 +1,6 @@
 import { Card } from '@/components/ui/card'
 
-import WidgetsList from './WidgetsList'
+import StreamWidgetsList from './StreamWidgetsList'
 
 function CurrentStreamCard({
   isLive,
@@ -61,7 +61,7 @@ function CurrentStreamCard({
         </div>
 
         <div className="mt-auto">
-          <WidgetsList />
+          <StreamWidgetsList />
         </div>
       </div>
     </Card>

@@ -10,7 +10,7 @@ export const mapTwitchUserToStreamer = (data) => {
     accessToken: access_token,
     refreshToken: refresh_token,
     scope: scope,
-    expireIn: expires_in,
+    expiresIn: expires_in,
     profileImageUrl: profile_image_url,
   }
 }

@@ -1,5 +1,5 @@
 import { validateTwitchEnv } from '../config/env.js'
-import { AppError } from '../utils/AppError.js'
+import { AppError } from '../utils/appError.js'
 import { upsertStreamer } from './streamerService.js'
 
 const getTwitchAuthUrl = () => {

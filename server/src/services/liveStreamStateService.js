@@ -1,12 +1,15 @@
 import { getRedis } from '../config/redis.js'
 import {
   activeStreamKey,
-  streamChatterKey,
-  streamChatterMetaKey,
+  streamChatterMetadataKey,
+  streamChattersKey,
   streamStatsKey,
 } from '../utils/redisKeys.js'
 
-const addActiveStream = async (streamerTwitchId, twitchStreamId) => {
+const initializeActiveStreamState = async (
+  streamerTwitchId,
+  twitchStreamId,
+) => {
   const client = await getRedis()
 
   await client.set(activeStreamKey(streamerTwitchId), twitchStreamId)
@@ -15,7 +18,7 @@ const addActiveStream = async (streamerTwitchId, twitchStreamId) => {
   })
 }
 
-const trackStreamMessage = async (
+const recordStreamMessage = async (
   streamerTwitchId,
   chatterTwitchId,
   chatterMeta,
@@ -26,9 +29,9 @@ const trackStreamMessage = async (
   if (!twitchStreamId || !chatterTwitchId) return null
 
   await client.hIncrBy(streamStatsKey(twitchStreamId), 'totalMessages', 1)
-  await client.hIncrBy(streamChatterKey(twitchStreamId), chatterTwitchId, 1)
+  await client.hIncrBy(streamChattersKey(twitchStreamId), chatterTwitchId, 1)
   await client.hSet(
-    streamChatterMetaKey(twitchStreamId),
+    streamChatterMetadataKey(twitchStreamId),
     chatterTwitchId,
     JSON.stringify(chatterMeta),
   )
@@ -42,10 +45,12 @@ const getActiveStreamStats = async (streamerTwitchId) => {
   if (!twitchStreamId) return null
 
   const stats = await client.hGetAll(streamStatsKey(twitchStreamId))
-  const chatterStats = await client.hGetAll(streamChatterKey(twitchStreamId))
-  const chatterMeta = await client.hGetAll(streamChatterMetaKey(twitchStreamId))
+  const chatterStats = await client.hGetAll(streamChattersKey(twitchStreamId))
+  const chatterMeta = await client.hGetAll(
+    streamChatterMetadataKey(twitchStreamId),
+  )
 
-  const chatters = formatChatters(chatterStats, chatterMeta)
+  const chatters = mapChatterStats(chatterStats, chatterMeta)
 
   return {
     twitchStreamId,
@@ -54,7 +59,7 @@ const getActiveStreamStats = async (streamerTwitchId) => {
   }
 }
 
-const removeActiveStream = async (streamerTwitchId) => {
+const clearActiveStreamState = async (streamerTwitchId) => {
   const client = await getRedis()
   const twitchStreamId = await client.get(activeStreamKey(streamerTwitchId))
 
@@ -62,11 +67,11 @@ const removeActiveStream = async (streamerTwitchId) => {
 
   await client.del(activeStreamKey(streamerTwitchId))
   await client.del(streamStatsKey(twitchStreamId))
-  await client.del(streamChatterKey(twitchStreamId))
-  await client.del(streamChatterMetaKey(twitchStreamId))
+  await client.del(streamChattersKey(twitchStreamId))
+  await client.del(streamChatterMetadataKey(twitchStreamId))
 }
 
-const formatChatters = (chatters, chatterMeta) => {
+const mapChatterStats = (chatters, chatterMeta) => {
   const result = []
 
   for (const [chatterTwitchId, messagesCount] of Object.entries(chatters)) {
@@ -84,8 +89,8 @@ const formatChatters = (chatters, chatterMeta) => {
 }
 
 export {
-  addActiveStream,
+  clearActiveStreamState,
   getActiveStreamStats,
-  removeActiveStream,
-  trackStreamMessage,
+  initializeActiveStreamState,
+  recordStreamMessage,
 }

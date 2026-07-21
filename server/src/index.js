@@ -5,11 +5,11 @@ import express from 'express'
 import { connectRedis } from './config/redis.js'
 import { errorHandler } from './middleware/errorHandler.js'
 import authRoutes from './routes/authRoutes.js'
-import eventSubRoutes from './routes/eventSubRotes.js'
-import streamStatsRoute from './routes/streamStatsRoute.js'
+import eventSubRoutes from './routes/eventSubRoutes.js'
+import liveStreamStatsRoutes from './routes/liveStreamStatsRoutes.js'
 import streamerRoutes from './routes/streamerRoutes.js'
 import { connectBot } from './services/botService.js'
-import { AppError } from './utils/AppError.js'
+import { AppError } from './utils/appError.js'
 
 dotenv.config()
 const app = express()
@@ -34,7 +34,7 @@ app.use(
 )
 
 app.use('/api', authRoutes)
-app.use('/api', streamStatsRoute)
+app.use('/api', liveStreamStatsRoutes)
 app.use('/api', streamerRoutes)
 app.use('/', eventSubRoutes)
 

@@ -1,4 +1,4 @@
-export interface streamerProfileType {
+export interface StreamerProfile {
   displayName: string
   login: string
   profileImageUrl: string | null

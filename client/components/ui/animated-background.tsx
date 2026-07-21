@@ -193,7 +193,3 @@ export function StarfieldBackground({
     </div>
   )
 }
-
-export default function StarfieldBackgroundDemo() {
-  return <StarfieldBackground />
-}

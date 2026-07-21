@@ -1,7 +1,7 @@
 'use client'
 import { getApiUrl } from '@/lib/api'
-import { LiveStreamStats } from '@/types/stats'
-import { streamerProfileType } from '@/types/streamer'
+import { LiveStreamStats } from '@/types/streamStats'
+import { StreamerProfile } from '@/types/streamerProfile'
 import { useEffect, useMemo, useState } from 'react'
 
 import AchievementsCard from './components/AchievementsCard'
@@ -11,7 +11,7 @@ import MetricsGrid from './components/MetricsGrid'
 import PreviousStreamsList from './components/PreviousStreamsList'
 import TopChattersCard from './components/TopChattersCard'
 
-const previousStreams = [
+const mockPreviousStreams = [
   {
     twitchStreamId: 'stream-4',
     title: 'Evening stream and community games',
@@ -41,7 +41,7 @@ const previousStreams = [
   },
 ]
 
-function DashboardClient({ profile }: { profile: streamerProfileType }) {
+function DashboardClient({ profile }: { profile: StreamerProfile }) {
   const [stats, setStats] = useState<LiveStreamStats | null>(null)
   const [isLoadingStats, setIsLoadingStats] = useState(true)
 
@@ -100,8 +100,8 @@ function DashboardClient({ profile }: { profile: streamerProfileType }) {
       <div className="bg-twitch-purple/15 pointer-events-none absolute top-20 left-1/2 -z-10 h-80 w-[70%] -translate-x-1/2 rounded-full blur-[120px]" />
 
       <DashboardHeader
-        username={profile.displayName}
-        img={profile.profileImageUrl}
+        displayName={profile.displayName}
+        imageUrl={profile.profileImageUrl}
       />
 
       {isLoadingStats ? (
@@ -126,7 +126,7 @@ function DashboardClient({ profile }: { profile: streamerProfileType }) {
           </div>
         </>
       ) : (
-        <PreviousStreamsList streams={previousStreams} />
+        <PreviousStreamsList streams={mockPreviousStreams} />
       )}
     </section>
   )

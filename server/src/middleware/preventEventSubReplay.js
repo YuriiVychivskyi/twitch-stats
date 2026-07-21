@@ -1,5 +1,5 @@
 import { getRedis } from '../config/redis.js'
-import { AppError } from '../utils/AppError.js'
+import { AppError } from '../utils/appError.js'
 
 export const preventEventSubReplay = async (req, res, next) => {
   const messageId = req.headers['twitch-eventsub-message-id']

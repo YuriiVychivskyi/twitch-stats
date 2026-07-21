@@ -1,5 +1,5 @@
 import { getActiveStreamStats } from '../services/liveStreamStateService.js'
-import { AppError } from '../utils/AppError.js'
+import { AppError } from '../utils/appError.js'
 
 const getLiveStreamStats = async (req, res) => {
   const { streamerTwitchId } = req.params

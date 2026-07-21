@@ -1,6 +1,6 @@
 import { Card } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { ChatterStats } from '@/types/stats'
+import { ChatterStats } from '@/types/streamStats'
 import { Medal } from 'lucide-react'
 
 const achievementMilestones = [100, 300, 500, 1000]

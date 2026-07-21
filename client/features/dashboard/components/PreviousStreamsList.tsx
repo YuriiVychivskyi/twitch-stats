@@ -1,6 +1,6 @@
 import { Card } from '@/components/ui/card'
 import { formatNumber } from '@/lib/format'
-import { StreamHistoryItem } from '@/types/stats'
+import { StreamHistoryItem } from '@/types/streamStats'
 import {
   CalendarDays,
   Clock3,

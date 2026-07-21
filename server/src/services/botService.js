@@ -1,9 +1,9 @@
 import 'dotenv/config'
 import tmi from 'tmi.js'
 
-import { AppError } from '../utils/AppError.js'
+import { AppError } from '../utils/appError.js'
 import { refreshBotAccessToken } from './botAuthService.js'
-import { trackStreamMessage } from './liveStreamStateService.js'
+import { recordStreamMessage } from './liveStreamStateService.js'
 
 let client = null
 
@@ -32,12 +32,12 @@ const connectBot = async () => {
       return
 
     const chatterMeta = {
-      chatterDisplayName: tags['display-name'],
-      chatterUsername: tags.username,
+      displayName: tags['display-name'],
+      login: tags.username,
     }
 
     try {
-      await trackStreamMessage(tags['room-id'], tags['user-id'], chatterMeta)
+      await recordStreamMessage(tags['room-id'], tags['user-id'], chatterMeta)
     } catch (error) {
       console.error('Failed to increment stream messages', error)
     }

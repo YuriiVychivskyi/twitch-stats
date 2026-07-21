@@ -1,6 +1,6 @@
 import { Card } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { ChatterStats } from '@/types/stats'
+import { ChatterStats } from '@/types/streamStats'
 import { Crown, MessageCircle } from 'lucide-react'
 import Image from 'next/image'
 

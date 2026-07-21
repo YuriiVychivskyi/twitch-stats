@@ -1,6 +1,6 @@
 import * as z from 'zod'
 
-const Streamer = z.object({
+const StreamerSchema = z.object({
   twitchId: z.string(),
   login: z.string(),
   displayName: z.string(),
@@ -8,9 +8,9 @@ const Streamer = z.object({
   accessToken: z.string().min(10),
   refreshToken: z.string().min(10),
   scope: z.array(z.string()),
-  expireIn: z.number().positive(),
+  expiresIn: z.number().positive(),
   updatedAt: z.date().default(() => new Date()),
   profileImageUrl: z.string().optional(),
 })
 
-export default Streamer
+export default StreamerSchema

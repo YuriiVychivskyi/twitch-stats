@@ -1,6 +1,6 @@
 import { createHmac, timingSafeEqual } from 'node:crypto'
 
-import { AppError } from '../utils/AppError.js'
+import { AppError } from '../utils/appError.js'
 
 export const verifyEventSubSignature = (req, _res, next) => {
   const twitchSignature = req.headers['twitch-eventsub-message-signature']

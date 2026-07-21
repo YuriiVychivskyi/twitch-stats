@@ -67,7 +67,7 @@ const heroMetrics = [
   },
 ]
 
-export default function Home() {
+export default function HomePage() {
   return (
     <section className="relative left-1/2 min-h-screen w-screen -translate-x-1/2 overflow-hidden px-4">
       <div className="bg-twitch-purple/30 absolute top-[-220px] left-1/2 h-[420px] w-[900px] -translate-x-1/2 rounded-full blur-[150px]" />
