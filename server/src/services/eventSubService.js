@@ -10,6 +10,7 @@ import { AppError } from '../utils/AppError.js'
 import { joinChannel, partChannel } from './botService.js'
 import {
   addActiveStream,
+  getActiveStreamStats,
   removeActiveStream,
 } from './liveStreamStateService.js'
 
@@ -145,7 +146,7 @@ const handleStreamOffline = async (event) => {
     throw new AppError('Streamer not found', 404)
   }
 
-  const finalStats = await removeActiveStream(broadcaster_user_id)
+  const finalStats = await getActiveStreamStats(broadcaster_user_id)
 
   const streamsQuery = db
     .collection('streamers')
@@ -162,7 +163,7 @@ const handleStreamOffline = async (event) => {
 
   const streamRef = querySnapshot.docs[0].ref
 
-  await streamRef.update({
+  batch.update(streamRef, {
     status: 'ended',
     totalMessages: finalStats?.totalMessages ?? 0,
     endedAt: FieldValue.serverTimestamp(),
@@ -180,8 +181,9 @@ const handleStreamOffline = async (event) => {
     batch.set(chatterRef, chatter)
   })
 
-  if (chatters.length) await batch.commit()
+  await batch.commit()
 
+  await removeActiveStream(broadcaster_user_id)
   const login = broadcaster_user_login.replace(/#/g, '')
   await partChannel(login)
 

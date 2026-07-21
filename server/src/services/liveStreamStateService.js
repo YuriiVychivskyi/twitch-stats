@@ -58,24 +58,12 @@ const removeActiveStream = async (streamerTwitchId) => {
   const client = await getRedis()
   const twitchStreamId = await client.get(activeStreamKey(streamerTwitchId))
 
-  if (!twitchStreamId) return null
-
-  const stats = await client.hGetAll(streamStatsKey(twitchStreamId))
-  const chatterStats = await client.hGetAll(streamChatterKey(twitchStreamId))
-  const chatterMeta = await client.hGetAll(streamChatterMetaKey(twitchStreamId))
-
-  const chatters = formatChatters(chatterStats, chatterMeta)
+  if (!twitchStreamId) return
 
   await client.del(activeStreamKey(streamerTwitchId))
   await client.del(streamStatsKey(twitchStreamId))
   await client.del(streamChatterKey(twitchStreamId))
   await client.del(streamChatterMetaKey(twitchStreamId))
-
-  return {
-    twitchStreamId,
-    totalMessages: Number(stats.totalMessages || 0),
-    chatters,
-  }
 }
 
 const formatChatters = (chatters, chatterMeta) => {
