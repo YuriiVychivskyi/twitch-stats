@@ -30,5 +30,12 @@ export const preventEventSubReplay = async (req, res, next) => {
     return res.sendStatus(204)
   }
 
+  res.once('finish', () => {
+    if (res.statusCode >= 400)
+      redisClient.del(key).catch((error) => {
+        console.error('Error deleting key from Redis:', error)
+      })
+  })
+
   next()
 }
