@@ -139,29 +139,40 @@ const processStreamOnlineEvent = async (event) => {
 }
 
 const processStreamOfflineEvent = async (event) => {
-  const batch = db.batch()
   const { broadcaster_user_id, broadcaster_user_login } = event
 
-  if (!broadcaster_user_id) {
-    throw new AppError('Streamer not found', 404)
-  }
+  if (!broadcaster_user_id) throw new AppError('Streamer not found', 404)
 
-  const finalStats = await getActiveStreamStats(broadcaster_user_id)
-
-  const streamsQuery = db
+  const streamsCollection = db
     .collection('streamers')
     .doc(broadcaster_user_id)
     .collection('streams')
-    .where('status', '==', 'live')
-    .limit(1)
 
-  const querySnapshot = await streamsQuery.get()
+  const finalStats = await getActiveStreamStats(broadcaster_user_id)
 
-  if (querySnapshot.empty) {
-    throw new AppError('Live stream not found', 404)
+  let streamRef
+  if (finalStats?.twitchStreamId) {
+    streamRef = streamsCollection.doc(finalStats.twitchStreamId)
+
+    const streamSnapshot = await streamRef.get()
+    if (!streamSnapshot.exists) throw new AppError('Stream data not found', 404)
+
+    if (streamSnapshot.data()?.status === 'ended') {
+      await clearActiveStreamState(broadcaster_user_id)
+      return
+    }
+  } else {
+    const liveStreamsSnapshot = await streamsCollection
+      .where('status', '==', 'live')
+      .limit(1)
+      .get()
+
+    if (liveStreamsSnapshot.empty) return
+
+    streamRef = liveStreamsSnapshot.docs[0].ref
   }
 
-  const streamRef = querySnapshot.docs[0].ref
+  const batch = db.batch()
 
   batch.update(streamRef, {
     status: 'ended',
