@@ -16,8 +16,10 @@ const app = express()
 await connectRedis()
 await connectBot()
 
+const clientUrl = process.env.CLIENT_URL || 'http://localhost:3000'
+
 const corsOptions = {
-  origin: 'http://localhost:3000',
+  origin: clientUrl,
   optionsSuccessStatus: 200,
   credentials: true,
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
